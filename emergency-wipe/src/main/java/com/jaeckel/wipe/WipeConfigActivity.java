@@ -18,9 +18,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class HelloAndroidActivity extends Activity {
+public class WipeConfigActivity extends Activity {
 
-  private final static String TAG                    = HelloAndroidActivity.class.getSimpleName();
+  private final static String TAG                    = WipeConfigActivity.class.getSimpleName();
 
   static final int            RESULT_ENABLE          = 1;
   public static final String  PREF_MAX_FAILED_UNLOCK = "max_failed_unlock_attempts";
@@ -51,7 +51,7 @@ public class HelloAndroidActivity extends Activity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    prefs = HelloAndroidActivity.this.getSharedPreferences(AdminReceiver.class.getName(), 0);
+    prefs = WipeConfigActivity.this.getSharedPreferences(AdminReceiver.class.getName(), 0);
 
     mDPM = (DevicePolicyManager) this.getSystemService(Context.DEVICE_POLICY_SERVICE);
 
@@ -104,7 +104,7 @@ public class HelloAndroidActivity extends Activity {
       public void onClick(View view) {
         if (mDPM.isAdminActive(mDeviceAdminSample)) {
           // disable here
-          Toast.makeText(HelloAndroidActivity.this, "Disabling Device Admin", Toast.LENGTH_LONG).show();
+          Toast.makeText(WipeConfigActivity.this, "Disabling Device Admin", Toast.LENGTH_LONG).show();
           mDPM.removeActiveAdmin(mDeviceAdminSample);
           if (!mDPM.isAdminActive(mDeviceAdminSample)) {
             enableDeviceAdminButton.setText("Enable Device Admin");
@@ -112,7 +112,7 @@ public class HelloAndroidActivity extends Activity {
         } else {
           // enable here
 
-          Toast.makeText(HelloAndroidActivity.this, "Enabling Device Admin", Toast.LENGTH_LONG).show();
+          Toast.makeText(WipeConfigActivity.this, "Enabling Device Admin", Toast.LENGTH_LONG).show();
           // Launch the activity to have the user enable our admin.
           Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
           intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mDeviceAdminSample);

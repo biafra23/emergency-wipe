@@ -3,14 +3,14 @@ package com.jaeckel.wipe.test;
 import android.test.ActivityInstrumentationTestCase2;
 import com.jaeckel.wipe.*;
 
-public class HelloAndroidActivityTest extends ActivityInstrumentationTestCase2<HelloAndroidActivity> {
+public class HelloAndroidActivityTest extends ActivityInstrumentationTestCase2<WipeConfigActivity> {
 
     public HelloAndroidActivityTest() {
-        super(HelloAndroidActivity.class); 
+        super(WipeConfigActivity.class);
     }
 
     public void testActivity() {
-        HelloAndroidActivity activity = getActivity();
+        WipeConfigActivity activity = getActivity();
         assertNotNull(activity);
     }
 }

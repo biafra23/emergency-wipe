@@ -76,21 +76,16 @@ public class AdminReceiver extends DeviceAdminReceiver {
 
     Log.d(TAG, "onPasswordFailed: failedUnlockCount: " + getFailedCount(context));
 
-    if (getFailedCount(context) > prefs.getInt(HelloAndroidActivity.PREF_MAX_FAILED_UNLOCK, 3)) {
-
-      Log.d(TAG, "Wiping device...");
+    if (getFailedCount(context) > prefs.getInt(WipeConfigActivity.PREF_MAX_FAILED_UNLOCK, 3)) {
 
       final DevicePolicyManager mDPM = (DevicePolicyManager) context.getSystemService(Context.DEVICE_POLICY_SERVICE);
-      String rmDirectoryString = prefs.getString(HelloAndroidActivity.PREF_RM_DIR, "");
+      String rmDirectoryString = prefs.getString(WipeConfigActivity.PREF_RM_DIR, "");
 
-      final boolean wipeExternal = prefs.getBoolean(HelloAndroidActivity.PREF_WIPE_EXTERNAL, false);
-      final boolean wipeInternal = prefs.getBoolean(HelloAndroidActivity.PREF_WIPE_INTERNAL, false);
+      final boolean wipeExternal = prefs.getBoolean(WipeConfigActivity.PREF_WIPE_EXTERNAL, false);
+      final boolean wipeInternal = prefs.getBoolean(WipeConfigActivity.PREF_WIPE_INTERNAL, false);
       final boolean rmDir = !TextUtils.isEmpty(rmDirectoryString);
 
       if (wipeExternal) {
-
-        Log.d(TAG, "Wiping device and sdcard");
-        mDPM.wipeData(DevicePolicyManager.WIPE_EXTERNAL_STORAGE);
 
         Log.d(TAG, "Deleting files on " + Environment.getExternalStorageDirectory().getAbsolutePath()
                    + " in background...");

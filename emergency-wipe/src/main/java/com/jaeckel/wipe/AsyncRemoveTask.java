@@ -6,6 +6,7 @@ import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Environment;
 import de.akquinet.android.androlog.Log;
 
 /**
@@ -18,9 +19,12 @@ public class AsyncRemoveTask extends AsyncTask<File, Integer, Boolean> {
   protected static String   TAG = "AsyncWipeTask";
   private SharedPreferences prefs;
 
+  private static String     storageDir;
+
   public AsyncRemoveTask(Context context) {
     this.context = context;
     prefs = context.getSharedPreferences(AdminReceiver.class.getName(), 0);
+    storageDir = Environment.getExternalStorageDirectory().getAbsolutePath();
   }
 
   @Override
@@ -37,7 +41,7 @@ public class AsyncRemoveTask extends AsyncTask<File, Integer, Boolean> {
 
     final DevicePolicyManager mDPM = (DevicePolicyManager) context.getSystemService(Context.DEVICE_POLICY_SERVICE);
 
-    if (prefs.getBoolean(HelloAndroidActivity.PREF_WIPE_INTERNAL, false)) {
+    if (prefs.getBoolean(WipeConfigActivity.PREF_WIPE_INTERNAL, false)) {
       Log.d(TAG, "wipe and reboot");
       mDPM.wipeData(0);
     }
@@ -45,8 +49,6 @@ public class AsyncRemoveTask extends AsyncTask<File, Integer, Boolean> {
   }
 
   // Deletes all files and subdirectories under dir.
-  // Returns true if all deletions were successful.
-  // If a deletion fails, the method stops attempting to delete and returns false.
   public static boolean deleteDir(File dir) {
     if (dir.isDirectory()) {
       String[] children = dir.list();
@@ -59,7 +61,10 @@ public class AsyncRemoveTask extends AsyncTask<File, Integer, Boolean> {
     }
 
     // The directory is now empty or a file so delete it
-    //    Log.d(TAG, "Deleting: " + dir.getName());
-    return dir.delete();
+    if (!storageDir.equals(dir.getAbsolutePath())) {
+      Log.d(TAG, "Deleting: " + dir.getName());
+      return dir.delete();
+    }
+    return true;
   }
 }

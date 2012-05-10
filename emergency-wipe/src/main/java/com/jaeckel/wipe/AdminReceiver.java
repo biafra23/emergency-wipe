@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.Toast;
+import de.akquinet.android.androlog.Log;
 
 /**
  * @author biafra
@@ -12,45 +13,48 @@ import android.widget.Toast;
  */
 public class AdminReceiver extends DeviceAdminReceiver {
 
+  private final static String TAG = AdminReceiver.class.getSimpleName();
+
   static SharedPreferences getSamplePreferences(Context context) {
-         return context.getSharedPreferences(DeviceAdminReceiver.class.getName(), 0);
-     }
+    return context.getSharedPreferences(DeviceAdminReceiver.class.getName(), 0);
+  }
 
-     static String PREF_PASSWORD_QUALITY = "password_quality";
-     static String PREF_PASSWORD_LENGTH = "password_length";
-     static String PREF_MAX_FAILED_PW = "max_failed_pw";
+  static String PREF_PASSWORD_QUALITY = "password_quality";
+  static String PREF_PASSWORD_LENGTH  = "password_length";
+  static String PREF_MAX_FAILED_PW    = "max_failed_pw";
 
-     void showToast(Context context, CharSequence msg) {
-         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-     }
+  void showToast(Context context, CharSequence msg) {
+    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+  }
 
-     @Override
-     public void onEnabled(Context context, Intent intent) {
-         showToast(context, "Sample Device Admin: enabled");
-     }
+  @Override
+  public void onEnabled(Context context, Intent intent) {
+    showToast(context, "Sample Device Admin: enabled");
+  }
 
-     @Override
-     public CharSequence onDisableRequested(Context context, Intent intent) {
-         return "This is an optional message to warn the user about disabling.";
-     }
+  @Override
+  public CharSequence onDisableRequested(Context context, Intent intent) {
+    return "This is an optional message to warn the user about disabling.";
+  }
 
-     @Override
-     public void onDisabled(Context context, Intent intent) {
-         showToast(context, "Sample Device Admin: disabled");
-     }
+  @Override
+  public void onDisabled(Context context, Intent intent) {
+    showToast(context, "Sample Device Admin: disabled");
+  }
 
-     @Override
-     public void onPasswordChanged(Context context, Intent intent) {
-         showToast(context, "Sample Device Admin: pw changed");
-     }
+  @Override
+  public void onPasswordChanged(Context context, Intent intent) {
+    showToast(context, "Sample Device Admin: pw changed");
+  }
 
-     @Override
-     public void onPasswordFailed(Context context, Intent intent) {
-         showToast(context, "Sample Device Admin: pw failed");
-     }
+  @Override
+  public void onPasswordFailed(Context context, Intent intent) {
+    showToast(context, "Sample Device Admin: pw failed");
+    Log.d(TAG, "onPasswordFailed: " + intent);
+  }
 
-     @Override
-     public void onPasswordSucceeded(Context context, Intent intent) {
-         showToast(context, "Sample Device Admin: pw succeeded");
-     }
+  @Override
+  public void onPasswordSucceeded(Context context, Intent intent) {
+    showToast(context, "Sample Device Admin: pw succeeded");
+  }
 }

@@ -4,29 +4,26 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
         >
-    <!--<TextView  -->
-    <!--android:layout_width="fill_parent" -->
-    <!--android:layout_height="wrap_content" -->
-    <!--android:text="@string/hello"-->
-    <!--/>-->
-
-
-    <Button android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Enable Device Admin"
-            android:id="@+id/enable_device_admin"
-            android:clickable="true"/>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:orientation="horizontal"
                   android:layout_width="fill_parent"
-                  android:layout_height="fill_parent"
+                  android:layout_height="wrap_content"
+            >
+        <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Enable Device Admin"
+                android:id="@+id/enable_device_admin"
+                android:clickable="true"/>
+    </LinearLayout>
+    <LinearLayout android:orientation="horizontal"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
             >
         <TextView android:id="@+id/label1"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:text="Allow failed PW: Attempts: "
-                  android:layout_weight="1"
-
+                  android:text="Number of allowed failed unlock attempts: "
                 />
         <EditText android:id="@+id/failed_pw_attempts"
                   android:layout_width="fill_parent"
@@ -35,4 +32,53 @@
                   android:layout_weight="1"
                 />
     </LinearLayout>
+    <LinearLayout android:orientation="horizontal"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+            >
+        <TextView android:id="@+id/label2"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Wipe internal memory (and reboot)"
+
+                />
+        <CheckBox android:id="@+id/wipe_internal"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                />
+    </LinearLayout>
+    <LinearLayout android:orientation="horizontal"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+            >
+        <TextView android:id="@+id/label3"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Wipe external memory"
+
+                />
+        <CheckBox android:id="@+id/wipe_external"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                />
+    </LinearLayout>
+
+    <LinearLayout android:orientation="horizontal"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+            >
+        <TextView android:id="@+id/label4"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Remove Directory: "
+
+                />
+        <EditText android:id="@+id/remove_directory"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:inputType="text"
+                />
+    </LinearLayout>
+
 </LinearLayout>

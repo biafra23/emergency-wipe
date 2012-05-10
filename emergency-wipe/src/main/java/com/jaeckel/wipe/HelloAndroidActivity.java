@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,12 +24,20 @@ public class HelloAndroidActivity extends Activity {
 
   static final int            RESULT_ENABLE          = 1;
   public static final String  PREF_MAX_FAILED_UNLOCK = "max_failed_unlock_attempts";
+  public static final String  PREF_WIPE_INTERNAL     = "wipe_internal";
+  public static final String  PREF_WIPE_EXTERNAL     = "wipe_external";
+  public static final String  PREF_RM_DIR            = "remove_directory";
   private ActivityManager     mAM;
   private ComponentName       mDeviceAdminSample;
   private Button              enableDeviceAdminButton;
   private DevicePolicyManager mDPM;
 
   private EditText            failedPwAttemptsField;
+  private EditText            rmDirField;
+
+  private CheckBox            wipeInternal;
+  private CheckBox            wipeExternal;
+
   private SharedPreferences   prefs;
 
   /**
@@ -58,15 +68,27 @@ public class HelloAndroidActivity extends Activity {
       @Override
       public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
 
-        Log.d(TAG, "onEditorAction");
+        Log.d(TAG, "onEditorAction(failedPwAttemptsField)");
         SharedPreferences.Editor editor = prefs.edit();
-
         String maxFailedPwAttempts = failedPwAttemptsField.getText().toString();
-
         editor.putInt(PREF_MAX_FAILED_UNLOCK, Integer.valueOf(maxFailedPwAttempts));
-
         editor.commit();
+        return false;
+      }
+    });
 
+    rmDirField = (EditText) findViewById(R.id.remove_directory);
+    rmDirField.setText("" + prefs.getString(PREF_RM_DIR, ""));
+    rmDirField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+      @Override
+      public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+
+        Log.d(TAG, "onEditorAction(rmDirField)");
+        SharedPreferences.Editor editor = prefs.edit();
+        String rmDir = rmDirField.getText().toString();
+        editor.putString(PREF_RM_DIR, rmDir);
+        editor.commit();
         return false;
       }
     });
@@ -105,6 +127,32 @@ public class HelloAndroidActivity extends Activity {
         }
       }
     });
+
+    wipeInternal = (CheckBox) findViewById(R.id.wipe_internal);
+    wipeInternal.setChecked(prefs.getBoolean(PREF_WIPE_INTERNAL, false));
+    wipeInternal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+        Log.d(TAG, "onCheckedChanged.wipeInternal");
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(PREF_WIPE_INTERNAL, b);
+        editor.commit();
+      }
+    });
+
+    wipeExternal = (CheckBox) findViewById(R.id.wipe_external);
+    wipeExternal.setChecked(prefs.getBoolean(PREF_WIPE_EXTERNAL, false));
+    wipeExternal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+        Log.d(TAG, "onCheckedChanged.wipeExternal");
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(PREF_WIPE_EXTERNAL, b);
+        editor.commit();
+      }
+    });
   }
 
   @Override
@@ -119,6 +167,9 @@ public class HelloAndroidActivity extends Activity {
     }
 
     failedPwAttemptsField.setText("" + prefs.getInt(PREF_MAX_FAILED_UNLOCK, 3));
+    rmDirField.setText("" + prefs.getString(PREF_RM_DIR, ""));
+    wipeInternal.setChecked(prefs.getBoolean(PREF_WIPE_INTERNAL, false));
+    wipeExternal.setChecked(prefs.getBoolean(PREF_WIPE_EXTERNAL, false));
 
   }
 }

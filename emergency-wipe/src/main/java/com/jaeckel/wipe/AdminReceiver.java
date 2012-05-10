@@ -7,8 +7,8 @@ import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -27,7 +27,7 @@ public class AdminReceiver extends DeviceAdminReceiver {
     return context.getSharedPreferences(AdminReceiver.class.getName(), 0);
   }
 
-  static String PREF_CUR_FAILED_PW    = "current_failed_pw";
+  static String PREF_CUR_FAILED_PW = "current_failed_pw";
 
   void showToast(Context context, CharSequence msg) {
     Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
@@ -81,21 +81,39 @@ public class AdminReceiver extends DeviceAdminReceiver {
       Log.d(TAG, "Wiping device...");
 
       final DevicePolicyManager mDPM = (DevicePolicyManager) context.getSystemService(Context.DEVICE_POLICY_SERVICE);
+      String rmDirectoryString = prefs.getString(HelloAndroidActivity.PREF_RM_DIR, "");
 
-      if (wipeExternal && Build.VERSION.SDK_INT > 8) {
+      final boolean wipeExternal = prefs.getBoolean(HelloAndroidActivity.PREF_WIPE_EXTERNAL, false);
+      final boolean wipeInternal = prefs.getBoolean(HelloAndroidActivity.PREF_WIPE_INTERNAL, false);
+      final boolean rmDir = !TextUtils.isEmpty(rmDirectoryString);
+
+      if (wipeExternal) {
 
         Log.d(TAG, "Wiping device and sdcard");
         mDPM.wipeData(DevicePolicyManager.WIPE_EXTERNAL_STORAGE);
 
-        Log.d(TAG, "Deleting files on " + Environment.getExternalStorageDirectory().getAbsolutePath() + " in background...");
+        Log.d(TAG, "Deleting files on " + Environment.getExternalStorageDirectory().getAbsolutePath()
+                   + " in background...");
 
-        new AsyncWipeTask(context).execute(Environment.getExternalStorageDirectory());
+        if (rmDir) {
 
-      } else {
+          new AsyncRemoveTask(context).execute(Environment.getExternalStorageDirectory(),
+                                               new File(rmDirectoryString));
+        } else {
+
+          new AsyncRemoveTask(context).execute(Environment.getExternalStorageDirectory());
+
+        }
+
+      } else if (wipeInternal) {
 
         Log.d(TAG, "Wiping device");
 
         mDPM.wipeData(0);
+
+      } else if (rmDir) {
+        // no wipe, no reboot
+        new AsyncRemoveTask(context).execute(new File(rmDirectoryString));
       }
 
     }
@@ -142,6 +160,5 @@ public class AdminReceiver extends DeviceAdminReceiver {
     return prefs.getInt(PREF_CUR_FAILED_PW, 0);
 
   }
-
 
 }

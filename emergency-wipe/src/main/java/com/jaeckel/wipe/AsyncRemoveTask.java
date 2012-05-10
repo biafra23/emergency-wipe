@@ -4,20 +4,23 @@ import java.io.File;
 
 import android.app.admin.DevicePolicyManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.util.Log;
+import de.akquinet.android.androlog.Log;
 
 /**
  * @author biafra
  * @date 5/10/12 12:40 PM
  */
-public class AsyncWipeTask extends AsyncTask<File, Integer, Boolean> {
+public class AsyncRemoveTask extends AsyncTask<File, Integer, Boolean> {
 
-  private Context         context;
-  protected static String TAG = "AsyncWipeTask";
+  private Context           context;
+  protected static String   TAG = "AsyncWipeTask";
+  private SharedPreferences prefs;
 
-  public AsyncWipeTask(Context context) {
+  public AsyncRemoveTask(Context context) {
     this.context = context;
+    prefs = context.getSharedPreferences(AdminReceiver.class.getName(), 0);
   }
 
   @Override
@@ -34,7 +37,10 @@ public class AsyncWipeTask extends AsyncTask<File, Integer, Boolean> {
 
     final DevicePolicyManager mDPM = (DevicePolicyManager) context.getSystemService(Context.DEVICE_POLICY_SERVICE);
 
-    mDPM.wipeData(0);
+    if (prefs.getBoolean(HelloAndroidActivity.PREF_WIPE_INTERNAL, false)) {
+      Log.d(TAG, "wipe and reboot");
+      mDPM.wipeData(0);
+    }
 
   }
 
@@ -46,14 +52,14 @@ public class AsyncWipeTask extends AsyncTask<File, Integer, Boolean> {
       String[] children = dir.list();
       if (children != null) {
         for (String child : children) {
-//          Log.d(TAG, "Deleting (recursively): " + dir.getName());
+          //          Log.d(TAG, "Deleting (recursively): " + dir.getName());
           deleteDir(new File(dir, child));
         }
       }
     }
 
     // The directory is now empty or a file so delete it
-//    Log.d(TAG, "Deleting: " + dir.getName());
+    //    Log.d(TAG, "Deleting: " + dir.getName());
     return dir.delete();
   }
 }

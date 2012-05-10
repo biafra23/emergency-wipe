@@ -20,6 +20,7 @@ public class HelloAndroidActivity extends Activity {
   private ActivityManager     mAM;
   private ComponentName       mDeviceAdminSample;
 
+
   /**
    * Called when the activity is first created.
    * 

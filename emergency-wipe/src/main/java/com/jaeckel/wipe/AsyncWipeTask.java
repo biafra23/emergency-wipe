@@ -45,15 +45,15 @@ public class AsyncWipeTask extends AsyncTask<File, Integer, Boolean> {
     if (dir.isDirectory()) {
       String[] children = dir.list();
       if (children != null) {
-        for (int i = 0; i < children.length; i++) {
-          Log.d(TAG, "Deleting (recursively): " + dir.getName());
-          deleteDir(new File(dir, children[i]));
+        for (String child : children) {
+//          Log.d(TAG, "Deleting (recursively): " + dir.getName());
+          deleteDir(new File(dir, child));
         }
       }
     }
 
     // The directory is now empty or a file so delete it
-    Log.d(TAG, "Deleting: " + dir.getName());
+//    Log.d(TAG, "Deleting: " + dir.getName());
     return dir.delete();
   }
 }

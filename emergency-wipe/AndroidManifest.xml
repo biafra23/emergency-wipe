@@ -26,8 +26,6 @@
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED"/>
             </intent-filter>
         </receiver>
-
     </application>
-
 </manifest>
 

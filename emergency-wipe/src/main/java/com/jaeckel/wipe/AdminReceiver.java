@@ -27,9 +27,6 @@ public class AdminReceiver extends DeviceAdminReceiver {
     return context.getSharedPreferences(AdminReceiver.class.getName(), 0);
   }
 
-  static String PREF_PASSWORD_QUALITY = "password_quality";
-  static String PREF_PASSWORD_LENGTH  = "password_length";
-  static String PREF_MAX_FAILED_PW    = "max_failed_pw";
   static String PREF_CUR_FAILED_PW    = "current_failed_pw";
 
   void showToast(Context context, CharSequence msg) {
@@ -79,7 +76,7 @@ public class AdminReceiver extends DeviceAdminReceiver {
 
     Log.d(TAG, "onPasswordFailed: failedUnlockCount: " + getFailedCount(context));
 
-    if (getFailedCount(context) > MAX_FAILED_UNLOCK_COUNT) {
+    if (getFailedCount(context) > prefs.getInt(HelloAndroidActivity.PREF_MAX_FAILED_UNLOCK, 3)) {
 
       Log.d(TAG, "Wiping device...");
 

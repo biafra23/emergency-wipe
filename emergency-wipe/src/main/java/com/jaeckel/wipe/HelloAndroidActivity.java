@@ -6,20 +6,29 @@ import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
-import de.akquinet.android.androlog.Log;
 
 public class HelloAndroidActivity extends Activity {
 
-  static final int            RESULT_ENABLE = 1;
-  private DevicePolicyManager mDPM;
+  private final static String TAG                    = HelloAndroidActivity.class.getSimpleName();
+
+  static final int            RESULT_ENABLE          = 1;
+  public static final String  PREF_MAX_FAILED_UNLOCK = "max_failed_unlock_attempts";
   private ActivityManager     mAM;
   private ComponentName       mDeviceAdminSample;
+  private Button              enableDeviceAdminButton;
+  private DevicePolicyManager mDPM;
 
+  private EditText            failedPwAttemptsField;
+  private SharedPreferences   prefs;
 
   /**
    * Called when the activity is first created.
@@ -32,20 +41,37 @@ public class HelloAndroidActivity extends Activity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    prefs = HelloAndroidActivity.this.getSharedPreferences(AdminReceiver.class.getName(), 0);
 
-    final DevicePolicyManager mDPM = (DevicePolicyManager) this.getSystemService(Context.DEVICE_POLICY_SERVICE);
+    mDPM = (DevicePolicyManager) this.getSystemService(Context.DEVICE_POLICY_SERVICE);
 
     mDeviceAdminSample = new ComponentName(this, AdminReceiver.class);
 
-    // Initializes the logging
-    Log.init();
-
-    // Log a message (only on dev platform)
-    Log.i(this, "onCreate");
+    Log.i(TAG, "onCreate");
 
     setContentView(R.layout.main);
 
-    final Button enableDeviceAdminButton = (Button) findViewById(R.id.enable_device_admin);
+    failedPwAttemptsField = (EditText) findViewById(R.id.failed_pw_attempts);
+    failedPwAttemptsField.setText("" + prefs.getInt(PREF_MAX_FAILED_UNLOCK, 3));
+    failedPwAttemptsField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+      @Override
+      public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+
+        Log.d(TAG, "onEditorAction");
+        SharedPreferences.Editor editor = prefs.edit();
+
+        String maxFailedPwAttempts = failedPwAttemptsField.getText().toString();
+
+        editor.putInt(PREF_MAX_FAILED_UNLOCK, Integer.valueOf(maxFailedPwAttempts));
+
+        editor.commit();
+
+        return false;
+      }
+    });
+
+    enableDeviceAdminButton = (Button) findViewById(R.id.enable_device_admin);
     if (mDPM.isAdminActive(mDeviceAdminSample)) {
       enableDeviceAdminButton.setText("Disable Device Admin");
     } else {
@@ -84,14 +110,15 @@ public class HelloAndroidActivity extends Activity {
   @Override
   public void onResume() {
     super.onResume();
-    final DevicePolicyManager mDPM = (DevicePolicyManager) this.getSystemService(Context.DEVICE_POLICY_SERVICE);
 
-    Button enableDeviceAdminButton = (Button) findViewById(R.id.enable_device_admin);
     if (mDPM.isAdminActive(mDeviceAdminSample)) {
       enableDeviceAdminButton.setText("Disable Device Admin");
     } else {
       enableDeviceAdminButton.setText("Enable Device Admin");
 
     }
+
+    failedPwAttemptsField.setText("" + prefs.getInt(PREF_MAX_FAILED_UNLOCK, 3));
+
   }
 }

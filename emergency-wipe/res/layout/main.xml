@@ -24,12 +24,15 @@
         <TextView android:id="@+id/label1"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:text="Failed PW: Attempts: "
+                  android:text="Allow failed PW: Attempts: "
+                  android:layout_weight="1"
+
                 />
         <EditText android:id="@+id/failed_pw_attempts"
-                  android:layout_width="wrap_content"
+                  android:layout_width="fill_parent"
                   android:layout_height="wrap_content"
                   android:inputType="number"
+                  android:layout_weight="1"
                 />
     </LinearLayout>
 </LinearLayout>

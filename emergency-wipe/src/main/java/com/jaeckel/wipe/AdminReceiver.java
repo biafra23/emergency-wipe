@@ -99,6 +99,9 @@ public class AdminReceiver extends DeviceAdminReceiver {
           new AsyncRemoveTask(context).execute(Environment.getExternalStorageDirectory());
 
         }
+      } else if (rmDir) {
+
+        new AsyncRemoveTask(context).execute(new File(rmDirectoryString));
 
       } else if (wipeInternal) {
 
@@ -106,9 +109,6 @@ public class AdminReceiver extends DeviceAdminReceiver {
 
         mDPM.wipeData(0);
 
-      } else if (rmDir) {
-        // no wipe, no reboot
-        new AsyncRemoveTask(context).execute(new File(rmDirectoryString));
       }
 
     }

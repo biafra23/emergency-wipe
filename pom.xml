@@ -14,7 +14,7 @@
     </modules>
 
     <properties>
-        <platform.version>2.2_r3</platform.version>
+        <platform.version>2.3.3_r2</platform.version>
     </properties>
 
     <dependencyManagement>

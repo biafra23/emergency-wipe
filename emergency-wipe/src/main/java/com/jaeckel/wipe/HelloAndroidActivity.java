@@ -58,7 +58,7 @@ public class HelloAndroidActivity extends Activity {
           Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
           intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mDeviceAdminSample);
           intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,
-                          "Additional text explaining why this needs to be added.");
+                          "Emergency Wipe needs these Device Admin privileges to monitor failed password attempts and to wipe the device. ");
           startActivityForResult(intent, RESULT_ENABLE);
         }
       }

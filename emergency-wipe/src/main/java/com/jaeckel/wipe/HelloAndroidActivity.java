@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -43,13 +44,22 @@ public class HelloAndroidActivity extends Activity {
 
     setContentView(R.layout.main);
 
-    Button enableDeviceAdminButton = (Button) findViewById(R.id.enable_device_admin);
+    final Button enableDeviceAdminButton = (Button) findViewById(R.id.enable_device_admin);
+    if (mDPM.isAdminActive(mDeviceAdminSample)) {
+      enableDeviceAdminButton.setText("Disable Device Admin");
+    } else {
+      enableDeviceAdminButton.setText("Enable Device Admin");
+
+    }
     enableDeviceAdminButton.setOnClickListener(new View.OnClickListener() {
       public void onClick(View view) {
         if (mDPM.isAdminActive(mDeviceAdminSample)) {
           // disable here
           Toast.makeText(HelloAndroidActivity.this, "Disabling Device Admin", Toast.LENGTH_LONG).show();
           mDPM.removeActiveAdmin(mDeviceAdminSample);
+          if (!mDPM.isAdminActive(mDeviceAdminSample)) {
+            enableDeviceAdminButton.setText("Enable Device Admin");
+          }
         } else {
           // enable here
 
@@ -60,9 +70,27 @@ public class HelloAndroidActivity extends Activity {
           intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,
                           "Emergency Wipe needs these Device Admin privileges to monitor failed password attempts and to wipe the device. ");
           startActivityForResult(intent, RESULT_ENABLE);
+
+          if (mDPM.isAdminActive(mDeviceAdminSample)) {
+            enableDeviceAdminButton.setText("Disable Device Admin");
+          }
+
         }
       }
     });
   }
 
+  @Override
+  public void onResume() {
+    super.onResume();
+    final DevicePolicyManager mDPM = (DevicePolicyManager) this.getSystemService(Context.DEVICE_POLICY_SERVICE);
+
+    Button enableDeviceAdminButton = (Button) findViewById(R.id.enable_device_admin);
+    if (mDPM.isAdminActive(mDeviceAdminSample)) {
+      enableDeviceAdminButton.setText("Disable Device Admin");
+    } else {
+      enableDeviceAdminButton.setText("Enable Device Admin");
+
+    }
+  }
 }

@@ -1,4 +1,4 @@
 emergency-wipe
 ==============
 
-Removes certain configured directories on the sdcard and/or wipes your phone after several failed unlock attempts
+Removes a certain configured directory and/or wipes your phone and/or removes all files from the /sdcard after several failed unlock attempts
